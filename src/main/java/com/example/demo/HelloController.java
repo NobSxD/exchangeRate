@@ -1,23 +1,17 @@
 package com.example.demo;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.webcerebrium.binance.api.BinanceApi;
-import com.webcerebrium.binance.api.BinanceApiException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONString;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DecimalFormat;
 
 public class HelloController {
 
@@ -47,6 +41,8 @@ public class HelloController {
     @FXML
     private MenuButton vbibor1;
 
+
+
     @FXML
     private MenuButton vbibor2;
 
@@ -54,6 +50,7 @@ public class HelloController {
     void initialize() {
 
         getData.setOnAction(actionEvent -> {
+
             String getUserCity = city.getText().trim();
             String getUserCity1 = city1.getText().trim();
             if (!getUserCity.equals("")) {
