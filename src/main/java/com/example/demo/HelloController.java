@@ -1,126 +1,61 @@
 package com.example.demo;
 
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class HelloController {
 
 
+    public Button getButtonOk() {
+        return buttonOk;
+    }
+
+    public void setButtonOk(Button buttonOk) {
+        this.buttonOk = buttonOk;
+    }
 
     @FXML
-    private TextField city;
+    private Button buttonOk;
 
     @FXML
-    private TextField city1;
+    private TextField currencyOne;
 
     @FXML
-    private Text cyrs;
+    private TextField currencyTwo;
 
     @FXML
-    private Button getData;
+    private Text height;
 
     @FXML
-    private Text maxCyrs;
+    private Text maxPrice;
 
     @FXML
-    private Text minCyrs;
+    private Text minPrice;
 
     @FXML
-    private Text rost;
+    private Text price;
 
-    @FXML
-    private MenuButton vbibor1;
-
-
-
-    @FXML
-    private MenuButton vbibor2;
 
     @FXML
     void initialize() {
+        getButtonOk().setOnAction(event1 -> {
+            String getUserCurrencyOne = currencyOne.getText().trim();
+            String getUserCurrencyTwo = currencyTwo.getText().trim();
+            Launch launch = new Launch(getUserCurrencyOne, getUserCurrencyTwo);
 
-        getData.setOnAction(actionEvent -> {
-
-            String getUserCity = city.getText().trim();
-            String getUserCity1 = city1.getText().trim();
-            if (!getUserCity.equals("")) {
-                try {
-                    String outyt = getUrlContent("https://api.binance.com/api/v3/ticker?symbol="+ getUserCity + getUserCity1);
-                    JSONObject obj  = new JSONObject(outyt);
-                    String Kyrs = (String) obj.get("lastPrice");
-                    String maxKyrs = (String) obj.get("highPrice");
-                    String mixKyrs = (String) obj.get("lowPrice");
-                    String procent = (String) obj.get("openPrice");
-
-                    float format1 = new Float(Kyrs);
-                    float format2 = new Float(maxKyrs);
-                    float format3 = new Float(mixKyrs);
-                    float format4 = new Float(procent);
-                    float a = (format1 - format4)/format4*100;
-
-                    String formattedDouble = String.format("%.3f", format1);
-                    String formattedDouble1 = String.format("%.3f", format2);
-                    String formattedDouble2 = String.format("%.3f", format3);
-                    String formattrdDouble3 = String.format("%.1f", a);
-
-
-
-
-
-                    cyrs.setText("Курс: " + formattedDouble + " " + getUserCity1);
-                    maxCyrs.setText("Макс курс за 24ч: " + formattedDouble1 + " " + getUserCity1);
-                    minCyrs.setText("Мин курс за 24ч: " + formattedDouble2 + " " + getUserCity1);
-
-                    if(a >= 0) {
-                        rost.setText("Рост курса за 24ч: " + formattrdDouble3 + " %");
-
-                    }
-                    else {rost.setText("Подение курса за 24ч: " + formattrdDouble3 + " %");
-
-                    }
-
-                } catch (Exception e) {
-                    cyrs.setText("ERROR: Выбирите другую валюту");
-                }
-
-
-
-            }
+            price.setText(launch.getPrice());
+            maxPrice.setText(launch.getMaxPrice());
+            minPrice.setText(launch.getMinPrice());
+            height.setText(launch.getHeightFall());
 
         });
 
     }
 
 
-    private static String getUrlContent(String urlAdress) {
-        StringBuffer contentt = new StringBuffer();
-        try {
-
-            URL url = new URL(urlAdress);
-            URLConnection urlConn = url.openConnection();
-
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConn.getInputStream()));
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                contentt.append(line + "\n");
-            }
-            bufferedReader.close();
-        } catch (Exception e) {
-
-        }
-        return contentt.toString();
-
-    }
-
 }
+
+
+
