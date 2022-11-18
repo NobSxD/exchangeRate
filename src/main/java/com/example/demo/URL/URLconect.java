@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.URL;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class URLconect {
-    static String getUrlContent(String urlAdress) {
+    public static String getUrlContent(String urlAdress) {
         StringBuffer contentt = new StringBuffer();
         try {
 

@@ -11,16 +11,16 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 343, 557);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("authorization.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Binance");
         stage.setScene(scene);
         stage.show();
 
-
     }
 
-    public static void main(String[] args) {
-        launch();
+
+
+    public static void main(String[] args) throws IOException {launch();
     }
 }
