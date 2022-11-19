@@ -1,11 +1,12 @@
 package com.example.demo.rigister;
 
-import javafx.event.ActionEvent;
+import com.example.demo.login.Account;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class Registration {
 
@@ -19,10 +20,10 @@ public class Registration {
     private TextField loginName1;
 
     @FXML
-    private TextField loginName2;
+    private TextField  loginEmail;
 
     @FXML
-    private TextField loginName3;
+    private TextField  loginEmail1;
 
     @FXML
     private PasswordField password;
@@ -30,12 +31,35 @@ public class Registration {
     @FXML
     private PasswordField password1;
 
+    public Button getRegistration() {
+        return Registration;
+    }
+
     @FXML
     private Text registration;
 
     @FXML
-    void initialize(ActionEvent event) {
+    void initialize() {
+        getRegistration().setOnAction(actionEvent -> {
+            Account account = new Account();
+            String login = loginName.getText();
+            String login1 = loginName1.getText();
+            String email = loginEmail.getText();
+            String email1 = loginEmail1.getText();
+            String pas = password.getText();
+            String pas1 = password1.getText();
 
+            if (pas.equals(pas1)){
+                account.setLoginNam(login);
+                account.setPassword(pas);
+                String message = account.getNotifications();
+                account.SaveLogin();
+                message = "Регистрация завершина, войдите в систему";
+                ((Stage) (((Button) actionEvent.getSource()).getScene().getWindow())).close();
+            }
+            else registration.setText("не правельно повторили логин, почту или пароль");
+
+        });
     }
 
 }

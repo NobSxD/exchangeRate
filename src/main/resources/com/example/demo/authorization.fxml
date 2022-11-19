@@ -35,6 +35,7 @@
                             </font>
                         </Text>
                         <TextField fx:id="loginName" layoutX="30.0" layoutY="34.0" prefHeight="39.0" prefWidth="211.0" promptText="Видите логин:" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="34.0" />
+                     <PasswordField fx:id="password" layoutX="30.0" layoutY="73.0" prefHeight="39.0" prefWidth="212.0" promptText="Ведите пароль:" />
                         <Button fx:id="Login" defaultButton="true" layoutX="30.0" layoutY="121.0" mnemonicParsing="false" onAction="#initialize" prefHeight="39.0" prefWidth="211.0" text="Login" textAlignment="CENTER" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
                             <font>
                                 <Font size="18.0" />
@@ -50,7 +51,6 @@
                            <Font size="18.0" />
                         </font>
                      </Text>
-                     <PasswordField fx:id="password" layoutX="30.0" layoutY="73.0" prefHeight="39.0" prefWidth="212.0" promptText="Ведите пароль:" />
                     </children>
                 </AnchorPane>
             </children>

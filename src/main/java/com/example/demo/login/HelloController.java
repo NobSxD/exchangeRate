@@ -1,6 +1,6 @@
 package com.example.demo.login;
 
-import com.example.demo.mainMenu.mainWindow;
+import com.example.demo.rigister.startOfRegistration;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -42,11 +42,11 @@ public class HelloController {
     @FXML
     private PasswordField password;
 
+    startOfRegistration startOfRegistration = new startOfRegistration();
 
     @FXML
     void initialize() {
         Account account = new Account();
-        mainWindow mainWindow = new mainWindow();
         getLogin().setOnAction(event1 -> {
 
             account.setLoginNam(loginName.getText().toString());
@@ -56,14 +56,19 @@ public class HelloController {
             String message = account.getNotifications();
             if (message.equals("Пароль неверный, ведите другой пароль") || message.equals("Выполните регестрацию") || message.equals(" такой логин уже занят")) {
 
-            } else ((Stage)(((Button) event1.getSource()).getScene().getWindow())).close();
+            } else if (message.equals("Успешный вход")) {
+                ((Stage) (((Button) event1.getSource()).getScene().getWindow())).close();
+                
+            } else ((Stage) (((Button) event1.getSource()).getScene().getWindow())).close();
 
 
         });
         getRegistration().setOnAction(event1 -> {
-            account.setLoginNam(loginName.getText().toString());
-            account.setPassword(password.getText().toString());
-            account.SaveLogin();
+            try {
+                startOfRegistration.start(new Stage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             notifications.setText(account.getNotifications());
         });
     }

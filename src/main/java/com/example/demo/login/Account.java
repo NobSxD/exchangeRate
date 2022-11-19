@@ -3,21 +3,11 @@ package com.example.demo.login;
 import com.example.demo.mainMenu.systema;
 import com.example.demo.rigister.startOfRegistration;
 import javafx.stage.Stage;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 public class Account {
-
-    public String getLoginNam() {
-        return loginNam;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
     public String getNotifications() {
         return notifications;
@@ -31,36 +21,46 @@ public class Account {
         this.password = password;
     }
 
-    public void setNotifications(String notifications) {
-        this.notifications = notifications;
-    }
 
     private String loginNam;
    private String password;
    private String notifications;
    HashMap<String,String> loginPassword = new HashMap<>();
+
    systema systema = new systema();
+
    startOfRegistration startOfRegistration = new startOfRegistration();
 
-    public  void saveHashMap(){
+    public  void saveHashMap() throws IOException {
+        FileOutputStream outputStream = new FileOutputStream("C:\\Users\\chesn\\App\\Project Esc\\src\\main\\resources\\com\\example\\demo\\save.ser");  //сереализация логина пороля
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+        objectOutputStream.writeObject(loginPassword);
+        objectOutputStream.close();
+    }
+
+    public void deserialization() throws IOException {
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\chesn\\App\\Project Esc\\src\\main\\resources\\com\\example\\demo\\save.ser");  //десереализация логина пороля
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
         try {
-            YamlConfiguration cfg = new YamlConfiguration();
-            for (String key : loginPassword.keySet()){
-                cfg.set(key,  loginPassword.get(key));
-            }
-            File f = new File (getLoginNam()+ File.separator+"hashmap.yml");
-            if (f.exists()) f.delete();
-            cfg.save(f);
-        } catch (Exception e){
-            e.printStackTrace();
+            loginPassword = (HashMap<String, String>) objectInputStream.readObject();
+
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+        objectInputStream.close();
     }
 
     public void Log(){
+        try {
+            deserialization();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (loginPassword.containsKey(loginNam) == true){
             if (loginPassword.containsValue(password) == true){
                 try {
                     systema.start(new Stage());
+                    notifications = ("Успешный вход");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -71,19 +71,17 @@ public class Account {
         }
     }
     public void SaveLogin(){
-            try {
-                startOfRegistration.start(new Stage());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-            if (loginPassword.containsKey(loginNam) == true){
+        if (loginPassword.containsKey(loginNam) == true){
             notifications = (" такой логин уже занят");
         }
         else {
             loginPassword.put(loginNam,password);
             notifications = ("Регестрация завершина, Войдите в систему");
-
-        }
+                try {
+                    saveHashMap();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
     }
 }

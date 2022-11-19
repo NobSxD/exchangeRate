@@ -29,27 +29,27 @@
                 <children>
                     <AnchorPane prefHeight="298.0" prefWidth="369.0">
                         <children>
-                            <Text fill="#362929" layoutX="120.0" layoutY="21.0" scaleX="1.5" scaleY="1.1" scaleZ="1.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Авторизация:" textAlignment="CENTER" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0">
+                            <Text fill="#362929" layoutX="243.0" layoutY="21.0" scaleX="1.5" scaleY="1.1" scaleZ="1.5" strokeType="OUTSIDE" strokeWidth="0.0" text="Авторизация:" textAlignment="CENTER" AnchorPane.leftAnchor="243.0" AnchorPane.rightAnchor="215.484375">
                                 <font>
                                     <Font size="18.0" />
                                 </font>
                             </Text>
                             <TextField fx:id="loginName" layoutX="14.0" layoutY="56.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите логин:" AnchorPane.bottomAnchor="365.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="56.0" />
-                            <Button fx:id="Registration" defaultButton="true" layoutX="30.0" layoutY="376.0" mnemonicParsing="false" onAction="#initialize" prefHeight="39.0" prefWidth="211.0" text="Registrations" textAlignment="CENTER" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
-                                <font>
-                                    <Font size="18.0" />
-                                </font>
-                            </Button>
+                     <TextField fx:id="loginName1" layoutX="306.0" layoutY="56.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Имя:" />
+                     <TextField fx:id="loginEmail" layoutX="14.0" layoutY="118.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Почту:" />
+                     <TextField fx:id="loginEmail1" layoutX="306.0" layoutY="118.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Фамилию:" />
+                            <PasswordField fx:id="password" layoutX="14.0" layoutY="178.0" prefHeight="47.0" prefWidth="250.0" promptText="Ведите пароль:" />
+                     <PasswordField fx:id="password1" layoutX="306.0" layoutY="178.0" prefHeight="47.0" prefWidth="250.0" promptText="Повторите  пароль:" />
                             <Text fx:id="registration" accessibleRole="BUTTON" layoutX="149.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="250.0">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
                             </Text>
-                            <PasswordField fx:id="password" layoutX="14.0" layoutY="234.0" prefHeight="39.0" prefWidth="212.0" promptText="Ведите пароль:" />
-                     <PasswordField fx:id="password1" layoutX="306.0" layoutY="234.0" prefHeight="39.0" prefWidth="212.0" promptText="Повторите  пароль:" />
-                     <TextField fx:id="loginName3" layoutX="306.0" layoutY="56.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Имя:" />
-                     <TextField fx:id="loginName2" layoutX="306.0" layoutY="118.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Фамилию:" />
-                     <TextField fx:id="loginName1" layoutX="14.0" layoutY="118.0" prefHeight="47.0" prefWidth="250.0" promptText="Видите Почту:" />
+                            <Button fx:id="Registration" defaultButton="true" layoutX="30.0" layoutY="376.0" mnemonicParsing="false" onAction="#initialize" prefHeight="39.0" prefWidth="211.0" text="Registrations" textAlignment="CENTER" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                                <font>
+                                    <Font size="18.0" />
+                                </font>
+                            </Button>
                         </children>
                     </AnchorPane>
                 </children>

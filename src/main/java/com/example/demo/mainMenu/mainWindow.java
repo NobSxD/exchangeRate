@@ -9,6 +9,8 @@ import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.example.demo.URL.URLconect.getUrlContent;
 
 public class mainWindow {
@@ -27,9 +29,9 @@ public class mainWindow {
         this.page = page;
     }
 
-    private String currency;
+    private String currency ="USD";
     private int perPage = 100;
-    private int page;
+    private int page = 1;
 
 
     public Button getGo() {
@@ -87,6 +89,7 @@ public class mainWindow {
     private Button six;
     @FXML
     private Button seven;
+
     @FXML
     private Button eight;
     @FXML
@@ -101,6 +104,12 @@ public class mainWindow {
     @FXML
     private Color x4;
 
+    @FXML
+    private Text change;
+    @FXML
+    private Text idRank;
+
+
     public void data() {
         String url = urlLinks.urlCoinGeco(currency, perPage, page);                       //параметры для отображение курс валют на главное страницы
         String content = getUrlContent(url);
@@ -108,18 +117,25 @@ public class mainWindow {
         JSONArray object = new JSONArray(content);
         String name = "";
         String price = "";
+        String idR = "";
+        String volotilnost ="";
         for (int i = 0; i < object.length(); i++) {
             String data = object.get(i).toString();
             JSONObject jsonObject = new JSONObject(data);
             name = name + "\n" + jsonObject.get("symbol").toString();
             price = price + "\n" + jsonObject.get("current_price");
+            idR = idR +"\n" + jsonObject.get("market_cap_rank").toString();
+            volotilnost += "\n" + jsonObject.get("market_cap_change_percentage_24h") +"%";
             nameCrypto.setText(name);
             priceCrypto.setText(price);
+            idRank.setText(idR);
+            change.setText(volotilnost);
         }
     }
 
     @FXML
     void initialize() {
+        AtomicInteger i = new AtomicInteger();
         getGo().setOnAction(actionEvent -> {
             setCurrency("USD");
             setPage(1);
@@ -161,9 +177,12 @@ public class mainWindow {
             data();
         });
         getEight().setOnAction(event -> {
+            i.getAndAdd(1);
             setCurrency("USD");
-            setPage(8);
+            setPage(8+i.get());
             data();
+            eight.setText(String.valueOf(8+i.get()));
+
         });
     }
 
