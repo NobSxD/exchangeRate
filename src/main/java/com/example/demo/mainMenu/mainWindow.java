@@ -12,9 +12,8 @@ import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.example.demo.URL.URLconect.getUrlContent;
 
@@ -384,8 +383,8 @@ public class mainWindow {
     private Label labelName;
 
 
-
     UrlLinks urlLinks = new UrlLinks();
+
     public String getCurrency() {
         return currency;
     }
@@ -413,23 +412,26 @@ public class mainWindow {
     private String currency;
     private int perPage = 100;
     private int page;
-    public void data() {
+    ArrayList<String> listMap = new ArrayList<>();
+    ArrayList<dataURL> map = new ArrayList<>();
+    public void data() {                                                                                     //делай запрос через API и распарсиваем всю информацию
 
         String url = urlLinks.urlCoinGeco(currency, perPage, page);
         String content = getUrlContent(url);
         JSONArray object = new JSONArray(content);
-        String id ="";
-        String namCrypto ="";
+        String id = "";
+        String namCrypto = "";
         String priceCrypto = "";
         String change1ch = "";
-        String change24ch ="";
-        String change7D ="";
-        String valume24 ="";
-        String cap ="";
+        String change24ch = "";
+        String change7D = "";
+        String valume24 = "";
+        String cap = "";
 
         for (int i = 0; i < object.length(); i++) {
             String data = object.get(i).toString();
             JSONObject jsonObject = new JSONObject(data);
+            listMap.add(data);
             id = id + jsonObject.get("market_cap_rank") + "\n";
             namCrypto = namCrypto + jsonObject.get("name") + "\n";
             priceCrypto = priceCrypto + jsonObject.get("current_price") + "*" + "\n";
@@ -437,6 +439,13 @@ public class mainWindow {
             valume24 = valume24 + jsonObject.get("total_volume") + "\n";
             cap = cap + jsonObject.get("market_cap") + "\n";
         }
+        for (int i = 0; i < listMap.size(); i++) {
+            String data = listMap.get(i).toString();
+            JSONObject jsonObject = new JSONObject(data);
+            map.add(new dataURL(jsonObject.get("market_cap_rank").toString(), jsonObject.get("id").toString(),
+                    jsonObject.get("current_price").toString(), jsonObject.get("market_cap_change_percentage_24h").toString(),
+                    jsonObject.get("total_volume").toString(), jsonObject.get("market_cap").toString()));
+
             idText.setText(id);
             nameCryptoText.setText(namCrypto);
             priceText.setText(priceCrypto);
@@ -444,53 +453,260 @@ public class mainWindow {
             volume24Text.setText(valume24);
             capText.setText(cap);
 
-    }
-    ArrayList<dataURL> map = new ArrayList<>();
-    public void data2() {
-
-        String url = urlLinks.urlCoinGeco(currency, perPage, page);
-        String content = getUrlContent(url);
-        JSONArray object = new JSONArray(content);
-
-
-        for (int i = 0; i < object.length(); i++) {
-            String data = object.get(i).toString();
-            JSONObject jsonObject = new JSONObject(data);
-
-                map.add(new dataURL(jsonObject.get("market_cap_rank").toString(), jsonObject.get("symbol").toString(),
-                        jsonObject.get("current_price").toString(), jsonObject.get("market_cap_change_percentage_24h").toString(), jsonObject.get("total_volume").toString(), jsonObject.get("market_cap").toString()));
-
-
         }
 
     }
 
 
 
+
+
     @FXML
-    void initialize() {
+    void initialize() {                                                                          //с помощью кнопок сортируем и получаем данные с другой страницы
+        AtomicInteger a = new AtomicInteger();
         getId().setOnAction(actionEvent -> {
-            data2();
-            Collections.sort(map, new Comparator<dataURL>() {
-            @Override
-            public int compare(dataURL o1, dataURL o2) {
 
-                    return (int) -(Double.parseDouble(o1.getId()) - Double.parseDouble(o2.getId()));
-            }});
-            String id ="";
-            String namCrypto ="";
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) -(Double.parseDouble(o1.getId()) - Double.parseDouble(o2.getId()));
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {                                                                // сортируем по id
+                        return (int) (Double.parseDouble(o1.getId()) - Double.parseDouble(o2.getId()));
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
             String priceCrypto = "";
-            String change24ch ="";
-            String valume24 ="";
-            String cap ="";
-            for (dataURL u:map) {
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
 
-               id = id + u.getId() + "\n";
-               namCrypto = namCrypto + u.getNameCrypto() +"\n";
-               priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
-               change24ch = change24ch + u.getExchein24() + "\n";
-               valume24 = valume24 + u.getVolume24() + "\n";
-               cap = cap + u.getCapText() + "\n";
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
+            }
+            idText.setText(id);
+            nameCryptoText.setText(namCrypto);
+            priceText.setText(priceCrypto);
+            chnge24chText.setText(change24ch);
+            volume24Text.setText(valume24);
+            capText.setText(cap);
+        });
+        getNameCrypto().setOnAction(actionEvent -> {                                                                    //сортируем по имени
+
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return  o1.getNameCrypto().compareTo(o2.getNameCrypto());
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return  o2.getNameCrypto().compareTo(o1.getNameCrypto());
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
+            String priceCrypto = "";
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
+
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
+            }
+            idText.setText(id);
+            nameCryptoText.setText(namCrypto);
+            priceText.setText(priceCrypto);
+            chnge24chText.setText(change24ch);
+            volume24Text.setText(valume24);
+            capText.setText(cap);
+        });
+
+        getPrice().setOnAction(actionEvent -> {                                                                         //сортируем по цене
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) -(Double.parseDouble(o1.getPriceCrypto()) - Double.parseDouble(o2.getPriceCrypto()));
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) (Double.parseDouble(o1.getPriceCrypto()) - Double.parseDouble(o2.getPriceCrypto()));
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
+            String priceCrypto = "";
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
+
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
+            }
+            idText.setText(id);
+            nameCryptoText.setText(namCrypto);
+            priceText.setText(priceCrypto);
+            chnge24chText.setText(change24ch);
+            volume24Text.setText(valume24);
+            capText.setText(cap);
+        });
+
+        getChange24ch().setOnAction(actionEvent -> {                                                                    //сортируем по росту или падению за 24 часа
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) -(Double.parseDouble(o1.getExchein24()) - Double.parseDouble(o2.getExchein24()));
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) (Double.parseDouble(o1.getExchein24()) - Double.parseDouble(o2.getExchein24()));
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
+            String priceCrypto = "";
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
+
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
+            }
+            idText.setText(id);
+            nameCryptoText.setText(namCrypto);
+            priceText.setText(priceCrypto);
+            chnge24chText.setText(change24ch);
+            volume24Text.setText(valume24);
+            capText.setText(cap);
+        });
+        getVolume24().setOnAction(actionEvent -> {
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) -(Double.parseDouble(o1.getVolume24()) - Double.parseDouble(o2.getVolume24()));
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) (Double.parseDouble(o1.getVolume24()) - Double.parseDouble(o2.getVolume24()));
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
+            String priceCrypto = "";
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
+
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
+            }
+            idText.setText(id);
+            nameCryptoText.setText(namCrypto);
+            priceText.setText(priceCrypto);
+            chnge24chText.setText(change24ch);
+            volume24Text.setText(valume24);
+            capText.setText(cap);
+        });
+
+        getCap().setOnAction(actionEvent -> {
+            a.getAndAdd(1);
+
+            if (a.get() %2!=0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) -(Double.parseDouble(o1.getCapText()) - Double.parseDouble(o2.getCapText()));
+                    }
+                });
+            }
+            else if (a.get() %2==0) {
+                Collections.sort(map, new Comparator<dataURL>() {
+                    @Override
+                    public int compare(dataURL o1, dataURL o2) {
+                        return (int) (Double.parseDouble(o1.getCapText()) - Double.parseDouble(o2.getCapText()));
+                    }
+                });
+            }
+            String id = "";
+            String namCrypto = "";
+            String priceCrypto = "";
+            String change24ch = "";
+            String valume24 = "";
+            String cap = "";
+            for (dataURL u : map) {
+
+                id = id + u.getId() + "\n";
+                namCrypto = namCrypto + u.getNameCrypto() + "\n";
+                priceCrypto = priceCrypto + u.getPriceCrypto() + "\n";
+                change24ch = change24ch + u.getExchein24() + "\n";
+                valume24 = valume24 + u.getVolume24() + "\n";
+                cap = cap + u.getCapText() + "\n";
             }
             idText.setText(id);
             nameCryptoText.setText(namCrypto);
@@ -515,6 +731,7 @@ public class mainWindow {
         getETH().setOnAction(actionEvent -> {
             labelName.setText("ETH");
         });
+
 
 
         getOne().setOnAction(event -> {
